@@ -8,8 +8,9 @@ package filter
 
 import (
 	"encoding/binary"
-	"github.com/syndtr/goleveldb/leveldb/util"
 	"testing"
+
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 type harness struct {
@@ -138,5 +139,14 @@ func TestBloomFilter_VaryingLengths(t *testing.T) {
 	t.Logf("false positive rate: %d good, %d mediocre", good, mediocre)
 	if mediocre > good/5 {
 		t.Error("mediocre false positive rate is more than expected")
+	}
+}
+
+func BenchmarkGenerate(b *testing.B) {
+	h := newHarness(&testing.T{})
+	h.add([]byte("hello"))
+	h.add([]byte("world"))
+	for i := 0; i < b.N; i++ {
+		h.build()
 	}
 }

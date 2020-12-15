@@ -95,7 +95,7 @@ func (g *bloomFilterGenerator) Generate(b Buffer) {
 		delta := (kh >> 17) | (kh << 15) // Rotate right 17 bits
 		for j := uint8(0); j < g.k; j++ {
 			bitpos := kh % nBits
-			dest[bitpos/8] |= (1 << (bitpos % 8))
+			dest[bitpos/8] |= (1 << (kh % 8))
 			kh += delta
 		}
 	}
