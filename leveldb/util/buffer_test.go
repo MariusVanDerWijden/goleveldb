@@ -391,3 +391,18 @@ func BenchmarkBufferFullSmallReads(b *testing.B) {
 		}
 	}
 }
+
+func BenchmarkBufferPool2(b *testing.B) {
+	pool := NewBufferPool(4096 + 5)
+	slices := make([][]byte, 0, b.N)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		slices = append(slices, pool.Get(rand.Intn(16*1024)))
+	}
+	for i := 0; i < b.N; i++ {
+		pool.Put(slices[i])
+	}
+	for i := 0; i < b.N; i++ {
+		pool.Get(rand.Intn(16 * 1024))
+	}
+}
